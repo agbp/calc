@@ -7,11 +7,12 @@
     "start": "npm run bundle && npm-run-all --parallel watch serve",
     "test": "echo \"Error: no test specified\" && exit 1",
     "bundle": "webpack",
+    "prod": "webpack --config webpack.prod.config.js",
     "watch": "webpack --watch",
     "serve": "cd dist && live-server"
   },
   "keywords": [],
-  "author": "",
+  "author": "Andrey.L.Golovin@gmail.com",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^6.7.1",
