@@ -1,4 +1,6 @@
 
+import './styles/index.scss';
+
 enum operationId {
     plus = 10,
     minus = 20,
@@ -189,14 +191,72 @@ const calculator:calculatorInterface = {
         this.addEventsToDigitButtons();
         this.addInputToButtonClick('btn_pt','.');
         this.addInputToButtonClick('btn_backspace','\b');
-        const historyOpenedFromCookie = getCookie('historyOpened');
-        if(historyOpenedFromCookie !== undefined) 
-            if(String(this.historyOpened) !== historyOpenedFromCookie)
+        document.addEventListener("keydown", (event:KeyboardEvent) => {
+            console.log('key pressed : ', event.key, ' key code = ', event.keyCode);
+            switch (event.key) {
+                case '.':
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                    this.addDigitOrOperation(event.key);
+                    break;
+                case '+':
+                    this.addDigitOrOperation(operationId.plus);
+                    break;
+                case '-':
+                    this.addDigitOrOperation(operationId.minus);
+                    break;
+                case '*':
+                    this.addDigitOrOperation(operationId.multiply);
+                    break;
+                case '/':
+                    this.addDigitOrOperation(operationId.divide);
+                    break;
+                case '/':
+                    this.addDigitOrOperation(operationId.divide);
+                    break;
+                case '=':
+                    this.addDigitOrOperation(operationId.equal);
+                    break;
+                case '%':
+                    this.addDigitOrOperation(operationId.percent);
+                    break;
+                default:
+                    switch (event.keyCode) {
+                        case 67:
+                            this.clearInput();
+                            break;
+                        case 8:
+                            this.addDigitOrOperation('\b');
+                            break;
+                        case 72:
+                            this.changeHistoryDisplay();
+                            break;
+                        case 83:
+                            this.changeScientificDisplay();
+                            break;
+                        case 38: //ArrowUp
+                        case 40: //ArrowDown
+                    }
+                }
+            });
+        var historyOpenedFromCookie = getCookie('historyOpened');
+        if (historyOpenedFromCookie !== undefined)
+            if (String(this.historyOpened) !== historyOpenedFromCookie)
                 this.changeHistoryDisplay();
-        const scientificOpenedFromCookie = getCookie('scientificOpened');
-        if(scientificOpenedFromCookie !== undefined) 
-        if(String(this.scientificOpened) !== scientificOpenedFromCookie)
-            this.changeScientificDisplay();
+        var scientificOpenedFromCookie = getCookie('scientificOpened');
+        if (scientificOpenedFromCookie !== undefined)
+            if (String(this.scientificOpened) !== scientificOpenedFromCookie)
+                this.changeScientificDisplay();
+
         this.getHistoryList();
         },
     addActionToButtonClick(buttonId, action) {

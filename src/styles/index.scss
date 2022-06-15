@@ -3,11 +3,10 @@ $padding: 6px;
 
 @font-face {
     font-family: 'lcdmonoultra';
-    src: url('../fonts/webfontkit-20220602-095433/lcdmu___-webfont.woff2') format('woff2'),
-         url('../fonts/webfontkit-20220602-095433/lcdmu___-webfont.woff') format('woff');
+    src: url('../assets/fonts/lcdmu___-webfont.woff2') format('woff2'),
+         url('../assets/fonts/lcdmu___-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-
 }
 
 * {
@@ -16,7 +15,7 @@ $padding: 6px;
     padding: 0;
     box-sizing: border-box;
     border-radius: 5px;
-    color:gray
+    color:red;
 }
 
 body {
