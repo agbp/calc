@@ -20,7 +20,7 @@ module.exports = {
                 ],
                 exclude: '/node_modules/',
             },
-            {
+/*             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i, 
                 use: [{
                     loader: 'file-loader',
@@ -34,7 +34,7 @@ module.exports = {
                     '/.vscode/',
                 ],
             }
-        ],
+ */        ],
     },
     plugins: [
         new miniCSS({
