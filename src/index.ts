@@ -237,7 +237,6 @@ const calculator: calculatorInterface = {
 				case "7":
 				case "8":
 				case "9":
-				case "0":
 					this.addDigitOrOperation(event.key);
 					break;
 				case "+":
