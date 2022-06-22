@@ -9,7 +9,9 @@
 		"bundle": "webpack",
 		"prod": "webpack --config webpack.prod.config.js",
 		"watch": "webpack --watch",
-		"serve": "cd dist && live-server"
+		"serve": "cd dist && live-server",
+		"lint": "eslint . --cache",
+		"fix": "eslint . --fix"
 	},
 	"keywords": [],
 	"author": "Andrey.L.Golovin@gmail.com",
@@ -20,10 +22,8 @@
 		"css-loader": "^6.7.1",
 		"eslint": "^8.18.0",
 		"eslint-config-airbnb": "^19.0.4",
+		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-jsx-a11y": "^6.5.1",
-		"eslint-plugin-react": "^7.30.0",
-		"eslint-plugin-react-hooks": "^4.6.0",
 		"file-loader": "^6.2.0",
 		"live-server": "^1.2.2",
 		"mini-css-extract-plugin": "^2.6.0",

@@ -1,8 +1,9 @@
 const path = require('path');
-const miniCSS = require('mini-css-extract-plugin');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const MiniCSS = require('mini-css-extract-plugin');
 
 module.exports = {
-	mode: "production",
+	mode: 'production',
 	entry: './src/index.ts',
 	module: {
 		rules: [
@@ -14,30 +15,31 @@ module.exports = {
 			{
 				test: /\.s[ac]ss?$/i,
 				use: [
-					miniCSS.loader,
+					MiniCSS.loader,
 					'css-loader',
 					'sass-loader',
 				],
 				exclude: '/node_modules/',
 			},
-/*             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/i, 
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        limit: 100,
-                        name: 'assets/fonts/[name].[ext]',
-                    }
-                }],
-                exclude: [
-                    '/node_modules/',
-                    '/.vscode/',
-                ],
-            }
- */        ],
+			/*             {
+											test: /\.(woff|woff2|eot|ttf|otf)$/i,
+											use: [{
+													loader: 'file-loader',
+													options: {
+															limit: 100,
+															name: 'assets/fonts/[name].[ext]',
+													}
+											}],
+											exclude: [
+													'/node_modules/',
+													'/.vscode/',
+											],
+									}
+			 */
+		],
 	},
 	plugins: [
-		new miniCSS({
+		new MiniCSS({
 			filename: './styles/style.css',
 		}),
 	],

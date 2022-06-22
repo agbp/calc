@@ -1,8 +1,8 @@
 const path = require('path');
-const miniCSS = require('mini-css-extract-plugin');
+const MiniCSS = require('mini-css-extract-plugin');
 
 module.exports = {
-	mode: "development",
+	mode: 'development',
 	context: path.resolve(__dirname, 'src'),
 	entry: './index.ts',
 	devtool: 'inline-source-map',
@@ -16,7 +16,7 @@ module.exports = {
 			{
 				test: /\.s[ac]ss?$/i,
 				use: [
-					miniCSS.loader,
+					MiniCSS.loader,
 					'css-loader',
 					'sass-loader',
 				],
@@ -29,12 +29,12 @@ module.exports = {
 					options: {
 						limit: 100,
 						name: 'assets/test/[name].[ext]',
-					}
+					},
 				}],
 				exclude: '/node_modules/',
 			},
 			/*             {
-											test: /\.(woff|woff2|eot|ttf|otf)$/i, 
+											test: /\.(woff|woff2|eot|ttf|otf)$/i,
 											use: [{
 													loader: 'file-loader',
 													options: {
@@ -51,7 +51,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-		new miniCSS({
+		new MiniCSS({
 			filename: './styles/style.css',
 		}),
 	],

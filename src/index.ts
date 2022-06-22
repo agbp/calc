@@ -1,4 +1,4 @@
-import "./styles/index.scss";
+import './styles/index.scss';
 
 enum operationId {
 	plus = 10,
@@ -62,21 +62,17 @@ interface calculatorInterface {
 // возвращает куки с указанным name,
 // или undefined, если ничего не найдено
 function getCookie(name: string) {
-	let matches = document.cookie.match(
-		new RegExp(
-			"(?:^|; )" +
-			name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-			"=([^;]*)"
-		)
+	const matches = document.cookie.match(
+		new RegExp(`(?:^|; )${name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1')}=([^;]*)`),
 	);
 	return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 const calculator: calculatorInterface = {
-	inputElement: document.getElementById("calc_input") as HTMLInputElement,
-	historyDiv: document.getElementById("calc_history") as HTMLDivElement,
-	scientificDiv: document.getElementById("calc_scientific") as HTMLDivElement,
-	historyList: document.getElementById("calc_history_list") as HTMLUListElement,
+	inputElement: document.getElementById('calc_input') as HTMLInputElement,
+	historyDiv: document.getElementById('calc_history') as HTMLDivElement,
+	scientificDiv: document.getElementById('calc_scientific') as HTMLDivElement,
+	historyList: document.getElementById('calc_history_list') as HTMLUListElement,
 	historyListData: [],
 	stack: [],
 	waiting4NewNumber: false,
@@ -84,11 +80,11 @@ const calculator: calculatorInterface = {
 	scientificOpened: false,
 	operations: [],
 	clearInput() {
-		this.inputElement.value = "0";
+		this.inputElement.value = '0';
 		this.stack.length = 0;
 	},
 	getHistoryList() {
-		const historyFromCookie = getCookie("historyList");
+		const historyFromCookie = getCookie('historyList');
 		if (historyFromCookie) {
 			this.historyListData = JSON.parse(historyFromCookie);
 			this.historyListData.forEach((el: string) => {
@@ -97,11 +93,11 @@ const calculator: calculatorInterface = {
 		}
 	},
 	saveHistoryList() {
-		console.log(JSON.stringify(this.historyListData));
+		// console.debug(JSON.stringify(this.historyListData));
 		document.cookie = `historyList=${JSON.stringify(this.historyListData)}`;
 	},
 	addToHistoryList(arg, initialization = false) {
-		const newLi = document.createElement("li");
+		const newLi = document.createElement('li');
 		newLi.innerText = arg;
 		this.historyList.appendChild(newLi);
 		if (initialization) return;
@@ -112,43 +108,30 @@ const calculator: calculatorInterface = {
 		if (input in operationId) {
 			// is operation button pressed ?
 			const currOperation = this.operations.find(
-				(el: operationInterface) => el.id === input
+				(el: operationInterface) => el.id === input,
 			);
 			let result: number = NaN;
 			if (this.stack.length) {
-				//there is data to be calculated
+				// there is data to be calculated
 				const opId = this.stack.pop() as operationId;
 				const operation = this.operations.find(
-					(el: operationInterface) => el.id === opId
+					(el: operationInterface) => el.id === opId,
 				);
 				const operands: number[] = [];
-				for (let i = 1; i < operation!.arity; i++) {
+				for (let i = 1; i < operation!.arity; i += 1) {
 					operands.push(this.stack.pop() as number);
 				}
 				operands.push(Number(this.inputElement.value));
 				result = operation!.action.apply(null, operands);
 				this.inputElement.value = String(result);
-				this.addToHistoryList(
-					String(operands[0]) +
-					operation!.representation +
-					String(operands[1]) +
-					"=" +
-					this.inputElement.value
-				);
+				this.addToHistoryList(`${operands[0]}${operation!.representation}${operands[1]}=${this.inputElement.value}`);
 			} else {
 				result = Number(this.inputElement.value);
 			}
 			if (currOperation!.arity === 1) {
 				// no need to push in stack, just calculate right now
 				result = currOperation!.action(Number(this.inputElement.value));
-				this.addToHistoryList(
-					currOperation!.representation +
-					"(" +
-					this.inputElement.value +
-					")" +
-					"=" +
-					String(result)
-				);
+				this.addToHistoryList(`${currOperation!.representation}(${this.inputElement.value})=${result}`);
 				this.inputElement.value = String(result);
 			} else if (currOperation!.arity > 1) {
 				this.stack.push(result);
@@ -157,107 +140,102 @@ const calculator: calculatorInterface = {
 			this.waiting4NewNumber = true;
 		} else {
 			// not operation button preesed
-			if (this.waiting4NewNumber && input !== "\b") {
+			if (this.waiting4NewNumber && input !== '\b') {
 				// start of input a new number
-				this.inputElement.value = "";
+				this.inputElement.value = '';
 				this.waiting4NewNumber = false;
 			}
-			if (input === "\b") {
+			if (input === '\b') {
 				// backspace button pressed
 				this.inputElement.value = this.inputElement.value.slice(0, -1);
-				if (this.inputElement.value === "") this.inputElement.value = "0";
+				if (this.inputElement.value === '') this.inputElement.value = '0';
 				this.waiting4NewNumber = false;
 				return;
 			}
-			if (input === ".") {
+			if (input === '.') {
 				// decimal point button pressed
-				if (this.inputElement.value.indexOf(".") !== -1) return;
-				if (Number(this.inputElement.value) === 0)
-					this.inputElement.value = "0";
+				if (this.inputElement.value.indexOf('.') !== -1) return;
+				if (Number(this.inputElement.value) === 0) { this.inputElement.value = '0'; }
 			} else {
-				if (input === "0") if (this.inputElement.value === "0") return; // ignore input of 0 if current string value is 0
+				if (input === '0') if (this.inputElement.value === '0') return; // ignore input of 0 if current string value is 0
 				if (
-					this.inputElement.value.indexOf(".") === -1 &&
-					Number(this.inputElement.value) === 0
-				)
-					this.inputElement.value = ""; // there is no decimal point and last input is equal to 0, replace last input with new
+					this.inputElement.value.indexOf('.') === -1
+					&& Number(this.inputElement.value) === 0
+				) { this.inputElement.value = ''; } // there is no decimal point and last input is equal to 0, replace last input with new
 			}
-			this.inputElement.value = this.inputElement.value + input; // add next digit to current number input
+			this.inputElement.value += input;
+			// add next digit to current number input
 		}
 	},
 	changeHistoryDisplay() {
 		this.historyOpened = !this.historyOpened;
-		this.historyDiv.classList.toggle("hidden");
-		this.historyDiv.classList.toggle("shown");
+		this.historyDiv.classList.toggle('hidden');
+		this.historyDiv.classList.toggle('shown');
 		document.cookie = `historyOpened=${this.historyOpened}`;
 	},
 	changeScientificDisplay() {
 		this.scientificOpened = !this.scientificOpened;
-		this.scientificDiv.classList.toggle("hidden");
-		this.scientificDiv.classList.toggle("shown");
+		this.scientificDiv.classList.toggle('hidden');
+		this.scientificDiv.classList.toggle('shown');
 		document.cookie = `scientificOpened=${this.scientificOpened}`;
 	},
 	init() {
 		const historyBtn = document.getElementById(
-			"btn_history"
+			'btn_history',
 		) as HTMLButtonElement;
-		historyBtn.addEventListener("click", this.changeHistoryDisplay.bind(this));
+		historyBtn.addEventListener('click', this.changeHistoryDisplay.bind(this));
 		const scientificBtn = document.getElementById(
-			"btn_scientific"
+			'btn_scientific',
 		) as HTMLButtonElement;
 		scientificBtn.addEventListener(
-			"click",
-			this.changeScientificDisplay.bind(this)
+			'click',
+			this.changeScientificDisplay.bind(this),
 		);
 		this.initOperations();
 		this.clearInput();
-		this.inputElement.addEventListener("input", (event: Event) => {
+		this.inputElement.addEventListener('input', (event: Event) => {
 			const target = event.target as HTMLInputElement;
-			console.log("value = ", target.value);
-			if (target.value === "") {
+			// console.log('value = ', target.value);
+			if (target.value === '') {
 				this.clearInput();
-				return;
 			}
 		});
-		this.addActionToButtonClick("btn_clear", this.clearInput.bind(this));
+		this.addActionToButtonClick('btn_clear', this.clearInput.bind(this));
 		this.addEventsToDigitButtons();
-		this.addInputToButtonClick("btn_pt", ".");
-		this.addInputToButtonClick("btn_backspace", "\b");
-		document.addEventListener("keydown", (event: KeyboardEvent) => {
-			console.log("key pressed : ", event.key, " key code = ", event.keyCode);
+		this.addInputToButtonClick('btn_pt', '.');
+		this.addInputToButtonClick('btn_backspace', '\b');
+		document.addEventListener('keydown', (event: KeyboardEvent) => {
+			// console.log('key pressed : ', event.key, ' key code = ', event.keyCode);
 			switch (event.key) {
-				case ".":
-				case "0":
-				case "1":
-				case "2":
-				case "3":
-				case "4":
-				case "5":
-				case "6":
-				case "7":
-				case "8":
-				case "9":
+				case '.':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
 					this.addDigitOrOperation(event.key);
 					break;
-				case "+":
+				case '+':
 					this.addDigitOrOperation(operationId.plus);
 					break;
-				case "-":
+				case '-':
 					this.addDigitOrOperation(operationId.minus);
 					break;
-				case "*":
+				case '*':
 					this.addDigitOrOperation(operationId.multiply);
 					break;
-				case "/":
+				case '/':
 					this.addDigitOrOperation(operationId.divide);
 					break;
-				case "/":
-					this.addDigitOrOperation(operationId.divide);
-					break;
-				case "=":
+				case '=':
 					this.addDigitOrOperation(operationId.equal);
 					break;
-				case "%":
+				case '%':
 					this.addDigitOrOperation(operationId.percent);
 					break;
 				default:
@@ -266,7 +244,7 @@ const calculator: calculatorInterface = {
 							this.clearInput();
 							break;
 						case 8:
-							this.addDigitOrOperation("\b");
+							this.addDigitOrOperation('\b');
 							break;
 						case 72:
 							this.changeHistoryDisplay();
@@ -274,25 +252,28 @@ const calculator: calculatorInterface = {
 						case 83:
 							this.changeScientificDisplay();
 							break;
-						case 38: //ArrowUp
-						case 40: //ArrowDown
+						case 38: // ArrowUp
+						case 40: // ArrowDown
+						default:
 					}
 			}
 		});
-		var historyOpenedFromCookie = getCookie("historyOpened");
-		if (historyOpenedFromCookie !== undefined)
-			if (String(this.historyOpened) !== historyOpenedFromCookie)
-				this.changeHistoryDisplay();
-		var scientificOpenedFromCookie = getCookie("scientificOpened");
-		if (scientificOpenedFromCookie !== undefined)
-			if (String(this.scientificOpened) !== scientificOpenedFromCookie)
-				this.changeScientificDisplay();
+		const historyOpenedFromCookie = getCookie('historyOpened');
+		if (historyOpenedFromCookie !== undefined
+			&& String(this.historyOpened) !== historyOpenedFromCookie) {
+			this.changeHistoryDisplay();
+		}
+		const scientificOpenedFromCookie = getCookie('scientificOpened');
+		if (scientificOpenedFromCookie !== undefined
+			&& String(this.scientificOpened) !== scientificOpenedFromCookie) {
+			this.changeScientificDisplay();
+		}
 
 		this.getHistoryList();
 	},
 	addActionToButtonClick(buttonId, action) {
 		const btn = document.getElementById(buttonId) as HTMLButtonElement;
-		btn.addEventListener("click", action);
+		btn.addEventListener('click', action);
 	},
 	addInputToButtonClick(buttonId, input) {
 		this.addActionToButtonClick(buttonId, () => {
@@ -300,108 +281,108 @@ const calculator: calculatorInterface = {
 		});
 	},
 	addEventsToDigitButtons() {
-		for (let i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i += 1) {
 			this.addInputToButtonClick(`btn_${i}`, String(i));
 		}
 	},
 	initOperations() {
 		this.operations.push({
 			id: operationId.equal,
-			bittonId: "btn_equal",
+			bittonId: 'btn_equal',
 			arity: 0,
 			action: (a: number, b: number) => NaN,
-			representation: "=",
+			representation: '=',
 		});
 		this.operations.push({
 			id: operationId.plus,
-			bittonId: "btn_plus",
+			bittonId: 'btn_plus',
 			arity: 2,
 			action: (a: number, b: number) => a + b,
-			representation: "+",
+			representation: '+',
 		});
 		this.operations.push({
 			id: operationId.minus,
-			bittonId: "btn_minus",
+			bittonId: 'btn_minus',
 			arity: 2,
 			action: (a: number, b: number) => a - b,
-			representation: "-",
+			representation: '-',
 		});
 		this.operations.push({
 			id: operationId.multiply,
-			bittonId: "btn_multiply",
+			bittonId: 'btn_multiply',
 			arity: 2,
 			action: (a: number, b: number) => a * b,
-			representation: "×",
+			representation: '×',
 		});
 		this.operations.push({
 			id: operationId.divide,
-			bittonId: "btn_divide",
+			bittonId: 'btn_divide',
 			arity: 2,
 			action: (a: number, b: number) => a / b,
-			representation: "/",
+			representation: '/',
 		});
 		this.operations.push({
 			id: operationId.pow,
-			bittonId: "btn_pow",
+			bittonId: 'btn_pow',
 			arity: 2,
-			action: (a: number, b: number) => Math.pow(a, b),
-			representation: "^",
+			action: (a: number, b: number) => a ** b,
+			representation: '^',
 		});
 		this.operations.push({
 			id: operationId.sqrt,
-			bittonId: "btn_sqrt",
+			bittonId: 'btn_sqrt',
 			arity: 1,
 			action: (a: number) => Math.sqrt(a),
-			representation: "√",
+			representation: '√',
 		});
 		this.operations.push({
 			id: operationId.percent,
-			bittonId: "btn_percent",
+			bittonId: 'btn_percent',
 			arity: 1,
 			action: (a: number) => a / 100,
-			representation: "%",
+			representation: '%',
 		});
 		this.operations.push({
 			id: operationId.sin,
-			bittonId: "btn_sin",
+			bittonId: 'btn_sin',
 			arity: 1,
 			action: (a: number) => Math.sin(a),
-			representation: "sin",
+			representation: 'sin',
 		});
 		this.operations.push({
 			id: operationId.cos,
-			bittonId: "btn_cos",
+			bittonId: 'btn_cos',
 			arity: 1,
 			action: (a: number) => Math.cos(a),
-			representation: "cos",
+			representation: 'cos',
 		});
 		this.operations.push({
 			id: operationId.asin,
-			bittonId: "btn_asin",
+			bittonId: 'btn_asin',
 			arity: 1,
 			action: (a: number) => Math.asin(a),
-			representation: "asin",
+			representation: 'asin',
 		});
 		this.operations.push({
 			id: operationId.acos,
-			bittonId: "btn_acos",
+			bittonId: 'btn_acos',
 			arity: 1,
 			action: (a: number) => Math.acos(a),
-			representation: "acos",
+			representation: 'acos',
 		});
 		this.operations.push({
 			id: operationId.log,
-			bittonId: "btn_log",
+			bittonId: 'btn_log',
 			arity: 1,
 			action: (a: number) => Math.log(a),
-			representation: "log",
+			representation: 'log',
 		});
 		this.operations.push({
 			id: operationId.oneDivX,
-			bittonId: "btn_oneDivX",
+			bittonId: 'btn_oneDivX',
 			arity: 1,
 			action: (a: number) => 1 / a,
-			representation: "1/",
+			representation: '1/',
 		});
 		this.operations.forEach((el: operationInterface) => {
 			this.addInputToButtonClick(el.bittonId, el.id);
