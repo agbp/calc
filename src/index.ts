@@ -110,7 +110,7 @@ const calculator: calculatorInterface = {
 			const currOperation = this.operations.find(
 				(el: operationInterface) => el.id === input,
 			);
-			let result: number = NaN;
+			let result = NaN;
 			if (this.stack.length) {
 				// there is data to be calculated
 				const opId = this.stack.pop() as operationId;
@@ -118,22 +118,22 @@ const calculator: calculatorInterface = {
 					(el: operationInterface) => el.id === opId,
 				);
 				const operands: number[] = [];
-				for (let i = 1; i < operation!.arity; i += 1) {
+				for (let i = 1; i < operation?.arity ?? 0; i += 1) {
 					operands.push(this.stack.pop() as number);
 				}
 				operands.push(Number(this.inputElement.value));
-				result = operation!.action.apply(null, operands);
+				result = operation?.action.apply(null, operands) ?? NaN;
 				this.inputElement.value = String(result);
-				this.addToHistoryList(`${operands[0]}${operation!.representation}${operands[1]}=${this.inputElement.value}`);
+				this.addToHistoryList(`${operands[0]}${operation.representation}${operands[1]}=${this.inputElement.value}`);
 			} else {
 				result = Number(this.inputElement.value);
 			}
-			if (currOperation!.arity === 1) {
+			if (currOperation.arity === 1) {
 				// no need to push in stack, just calculate right now
-				result = currOperation!.action(Number(this.inputElement.value));
-				this.addToHistoryList(`${currOperation!.representation}(${this.inputElement.value})=${result}`);
+				result = currOperation?.action(Number(this.inputElement.value)) ?? NaN;
+				this.addToHistoryList(`${currOperation.representation}(${this.inputElement.value})=${result}`);
 				this.inputElement.value = String(result);
-			} else if (currOperation!.arity > 1) {
+			} else if (currOperation.arity > 1) {
 				this.stack.push(result);
 				this.stack.push(input as operationId);
 			}
